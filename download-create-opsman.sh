@@ -7,4 +7,4 @@ docker run -it --rm \
   -e STATE_FILE=telmore/environments/aws/sbx/state/state.yml \
   -e OPSMAN_CONFIG_FILE=telmore/environments/aws/sbx/config-director/templates/opsman.yml \
   platform-automation-image:${TOOLKIT_IMAGE_VERSION} \
-    /bin/bash ./scripts/platform-automation-tasks/create-vm.sh
+    /bin/bash ./platform-automation-tasks/tasks/create-vm.sh
