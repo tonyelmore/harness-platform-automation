@@ -2,6 +2,7 @@ docker run -it --rm \
   -v $PWD:/workspace \
   -v $PWD:/workspace/config \
   -v $PWD:/workspace/state \
+  -v $PWD/harness-platform-automation:/automation \
   -w /workspace \
   --env-file harness-platform-automation/create-vm.vars \
   -e STATE_FILE=telmore/environments/aws/sbx/state/state.yml \
