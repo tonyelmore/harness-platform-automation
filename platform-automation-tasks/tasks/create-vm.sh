@@ -22,7 +22,7 @@ OUTPUT_FILE_NAME="$(echo "$STATE_FILE" | env timestamp="$(date '+%Y%m%d.%-H%M.%S
 GENERATED_STATE_FILE_NAME="$(basename "$OUTPUT_FILE_NAME")"
 
 export IMAGE_FILE
-IMAGE_FILE="$(find /automation/image/*.{yml,ova,raw} 2>/dev/null | head -n1)"
+IMAGE_FILE="$(find image/*.{yml,ova,raw} 2>/dev/null | head -n1)"
 
 if [ -z "$IMAGE_FILE" ]; then
   echo "No image file found in image input."
