@@ -3,7 +3,7 @@ docker run -it --rm \
   -v $PWD:/workspace/config \
   -v $PWD:/workspace/state \
   -w /workspace \
-  --env-file create-vm.vars \
+  --env-file harness-platform-automation/create-vm.vars \
   -e STATE_FILE=telmore/environments/aws/sbx/state/state.yml \
   -e OPSMAN_CONFIG_FILE=telmore/environments/aws/sbx/config-director/templates/opsman.yml \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
