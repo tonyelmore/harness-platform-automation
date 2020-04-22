@@ -1,0 +1,20 @@
+---
+eu-north-1: ami-0b12a57a89a28fa66
+ap-south-1: ami-037c770279a9c9e79
+eu-west-3: ami-0a095f368b803f9ec
+eu-west-2: ami-055a768874ca1210a
+eu-west-1: ami-05dd28535e1cb3fad
+ap-northeast-2: ami-09d51ec20f8c3dba6
+ap-northeast-1: ami-0630ba117a2ffd192
+sa-east-1: ami-09a183cc4be6502f7
+ca-central-1: ami-042d7c3c3d49c6b49
+ap-southeast-1: ami-039f24809a43d3791
+ap-southeast-2: ami-05666c93842c6bfab
+eu-central-1: ami-0b7a49e2f3ba631ea
+us-east-1: ami-0fc0d66ab5800a5cc
+us-east-2: ami-05bad2f0dc4f17bba
+us-west-1: ami-0a1183b3ea607d49e
+us-west-2: ami-0a6fd64d4e26d2e00
+us-gov-west-1: ami-03e9c362
+us-gov-east-1: ami-0b4c2912e2ddc8490
+cn-north-1: ami-0276796e61b9be3df
