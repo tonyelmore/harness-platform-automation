@@ -22,7 +22,7 @@ OUTPUT_FILE_NAME="$(echo "$STATE_FILE" | env timestamp="$(date '+%Y%m%d.%-H%M.%S
 GENERATED_STATE_FILE_NAME="$(basename "$OUTPUT_FILE_NAME")"
 
 export IMAGE_FILE
-IMAGE_FILE="$(find image/*.{yml,ova,raw} 2>/dev/null | head -n1)"
+IMAGE_FILE="$(find $REPO/image/*.{yml,ova,raw} 2>/dev/null | head -n1)"
 
 if [ -z "$IMAGE_FILE" ]; then
   echo "No image file found in image input."
@@ -35,9 +35,9 @@ fi
 # INPUT_STATE_FILE need to be globbed (SC2086)
 # shellcheck disable=SC2068,SC2086
 p-automator create-vm \
---config "config/${OPSMAN_CONFIG_FILE}" \
+--config "${OPSMAN_CONFIG_FILE}" \
 --image-file "${IMAGE_FILE}"  \
---state-file state/${INPUT_STATE_FILE} \
+--state-file ${INPUT_STATE_FILE} \
 ${vars_files_args[@]}
 
 # INPUT_STATE_FILE need to be globbed (SC2086)

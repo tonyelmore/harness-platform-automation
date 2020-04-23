@@ -1,0 +1,1 @@
+echo "Commit state file now"
