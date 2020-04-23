@@ -7,4 +7,4 @@ docker run -it --rm \
   -e OPSMAN_CONFIG_FILE=$config_repo/environments/$iaas/$foundation/config-director/templates/opsman.yml \
   -e SCRIPT_REPO=$SCRIPT_REPO \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
-    /bin/bash /automation/tasks/create-vm.sh
+    /bin/bash $SCRIPT_REPO/platform-automation-tasks/tasks/create-vm.sh

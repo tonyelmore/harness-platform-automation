@@ -9,4 +9,4 @@ docker run -it --rm \
   -e OM_SKIP_SSL_VALIDATION=true \
   -e AUTH_CONFIG_FILE=$config_repo/environments/$iaas/$foundation/config-director/secrets/auth.yml \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
-    /bin/bash /automation/tasks/configure-authentication.sh
+    /bin/bash $SCRIPT_REPO/platform-automation-tasks/tasks/configure-authentication.sh
