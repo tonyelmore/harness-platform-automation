@@ -1,0 +1,162 @@
+harnessApiVersion: '1.0'
+type: BUILD
+notificationRules:
+- conditions:
+  - FAILED
+  executionScope: WORKFLOW
+  notificationGroupAsExpression: false
+  userGroupAsExpression: false
+  userGroupIds:
+  - _X8Cg3RQRWmWetztpGj7ug
+phases:
+- daemonSet: false
+  name: Phase 1
+  phaseSteps:
+  - type: PREPARE_STEPS
+    name: Prepare Steps
+    steps:
+    - type: SHELL_SCRIPT
+      name: Import Docker Image
+      properties:
+        commandPath: /tmp
+        connectionAttributes: null
+        connectionType: SSH
+        executeOnDelegate: false
+        host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
+        outputVars: ''
+        publishAsVar: false
+        scriptString: |-
+          export TOOLKIT_IMAGE_VERSION=4.3.4
+
+          echo "*********** Checking for existing docker image for platform automation toolkit"
+          if [[ "$(docker images -q platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} 2> /dev/null)" == "" ]]; then
+              echo "*********** Image not found... importing docker image"
+              docker import /tmp/pcf/downloaded-resources/platform-automation-image/platform-automation-image-${TOOLKIT_IMAGE_VERSION}.tgz platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION}
+          fi
+        scriptType: BASH
+        sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
+        sweepingOutputName: null
+        sweepingOutputScope: null
+        tags: ''
+        templateExpressions: null
+        templateVariables: ''
+        timeoutMillis: 60000
+    stepsInParallel: false
+  - type: COLLECT_ARTIFACT
+    name: Collect Artifact
+    steps:
+    - type: SHELL_SCRIPT
+      name: Vault Interpolate
+      properties:
+        commandPath: /tmp/pcf/scripts
+        connectionAttributes: null
+        connectionType: SSH
+        executeOnDelegate: false
+        host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
+        outputVars: ''
+        publishAsVar: false
+        scriptString: ./vault-interpolate.sh
+        scriptType: BASH
+        sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
+        sweepingOutputName: null
+        sweepingOutputScope: null
+        tags: ''
+        templateExpressions: null
+        templateUuid: null
+        templateVariables: null
+        templateVersion: null
+        timeoutMillis: 60000
+    - type: SHELL_SCRIPT
+      name: Download Create Opsman
+      properties:
+        commandPath: /tmp
+        connectionAttributes: null
+        connectionType: SSH
+        executeOnDelegate: false
+        host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
+        outputVars: ''
+        publishAsVar: false
+        scriptString: |-
+          set -eux
+
+          #TODO: Use a run uuid or something from harness to create a temp location
+          rm -rf pcf-working || true
+          mkdir pcf-working
+          cd pcf-working
+
+          git clone https://github.com/tonyelmore/harness-platform-automation.git
+          git clone https://github.com/tonyelmore/telmore.git
+
+          export TOOLKIT_IMAGE_VERSION=4.3.4
+
+          # Call vault interpolation (from Brad)
+          # In the meantime - we just have a hard coded secrets folder
+          cp -r /tmp/pcf/secrets .
+
+          cp -r harness-platform-automation/image .
+          mkdir generated-state
+
+          ./harness-platform-automation/download-create-opsman.sh
+
+          # git commit for state.yml (generated-state maybe?)
+
+          set +eux
+        scriptType: BASH
+        sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
+        sweepingOutputName: null
+        sweepingOutputScope: null
+        tags: ''
+        templateExpressions: null
+        templateUuid: null
+        templateVariables: null
+        templateVersion: null
+        timeoutMillis: 300000
+    - type: SHELL_SCRIPT
+      name: Configure Authentication
+      properties:
+        commandPath: /tmp
+        connectionAttributes: null
+        connectionType: SSH
+        executeOnDelegate: false
+        host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
+        outputVars: ''
+        publishAsVar: false
+        scriptString: |
+          sleep 120
+
+          set -eux
+
+          #TODO: Use a run uuid or something from harness to create a temp location
+          rm -rf pcf-working || true
+          mkdir pcf-working
+          cd pcf-working
+
+          git clone https://github.com/tonyelmore/harness-platform-automation.git
+          git clone https://github.com/tonyelmore/telmore.git
+
+          export TOOLKIT_IMAGE_VERSION=4.3.4
+
+          # Call vault interpolation (from Brad)
+          # In the meantime - we just have a hard coded secrets folder
+          cp -r /tmp/pcf/secrets .
+
+          ./harness-platform-automation/configure-authentication.sh
+
+          set +eux
+        scriptType: BASH
+        sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
+        sweepingOutputName: null
+        sweepingOutputScope: null
+        tags: ''
+        templateExpressions: null
+        templateUuid: null
+        templateVariables: null
+        templateVersion: null
+        timeoutMillis: 300000
+    stepsInParallel: false
+  - type: WRAP_UP
+    name: Wrap Up
+    stepsInParallel: false
+  provisionNodes: false
+  statefulSet: false
+templatized: false
