@@ -42,6 +42,6 @@ ${vars_files_args[@]}
 
 # INPUT_STATE_FILE need to be globbed (SC2086)
 # shellcheck disable=SC2086
-cp state/${INPUT_STATE_FILE} "generated-state/${GENERATED_STATE_FILE_NAME}"
+cp ${INPUT_STATE_FILE} "generated-state/${GENERATED_STATE_FILE_NAME}"
 
 # code_snippet create-vm-script end
