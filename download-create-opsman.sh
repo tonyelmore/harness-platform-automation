@@ -1,10 +1,10 @@
 docker run -it --rm \
   -v $PWD:/workspace \
-  -v $PWD/harness-platform-automation:/automation \
+  -v $PWD/$SCRIPT_REPO:/automation \
   -w /workspace \
-  --env-file harness-platform-automation/vars/download-create-opsman.yml \
+  --env-file $SCRIPT_REPO/vars/download-create-opsman.yml \
   -e STATE_FILE=telmore/environments/aws/sbx/state/state.yml \
   -e OPSMAN_CONFIG_FILE=telmore/environments/aws/sbx/config-director/templates/opsman.yml \
-  -e REPO=harness-platform-automation \
+  -e SCRIPT_REPO=$SCRIPT_REPO \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
-    /bin/bash ./harness-platform-automation/platform-automation-tasks/tasks/create-vm.sh
+    /bin/bash ./$SCRIPT_REPO/platform-automation-tasks/tasks/create-vm.sh
