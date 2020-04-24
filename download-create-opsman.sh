@@ -11,5 +11,7 @@ docker run -it --rm \
   -e PCF_opsman_decryption_passphrase=${PCF_opsman_decryption_passphrase} \
   -e PCF_ops_manager_iam_user_access_key=${PCF_ops_manager_iam_user_access_key} \
   -e PCF_ops_manager_iam_user_secret_key=${PCF_ops_manager_iam_user_secret_key} \
+  -e PCF_ops_manager_ssh_public_key=${PCF_ops_manager_ssh_public_key} \
+  -e PCF_ops_manager_ssh_private_key=${PCF_ops_manager_ssh_private_key} \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
     /bin/bash $SCRIPT_REPO/platform-automation-tasks/tasks/create-vm.sh
