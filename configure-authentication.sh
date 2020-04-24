@@ -1,3 +1,6 @@
+echo "Starting docker run"
+echo ${TOOLKIT_IMAGE_VERSION}
+
 docker run -it --rm \
   -v $PWD:/workspace \
   -v $PWD/$SCRIPT_REPO:/automation \
