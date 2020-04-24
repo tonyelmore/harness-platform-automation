@@ -13,6 +13,8 @@ echo $PCF_ops_manager_ssh_public_key
 echo $PCF_ops_manager_ssh_private_key
 echo ${TOOLKIT_IMAGE_VERSION}
 
+set -x
+
 docker run -it --rm \
   -v $PWD:/workspace \
   -v $PWD/$SCRIPT_REPO:/automation \
