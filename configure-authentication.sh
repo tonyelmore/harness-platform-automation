@@ -8,5 +8,11 @@ docker run -it --rm \
   -e OM_PASSWORD=${OM_PASSWORD} \
   -e OM_SKIP_SSL_VALIDATION=true \
   -e AUTH_CONFIG_FILE=$config_repo/environments/$iaas/$foundation/config-director/secrets/auth.yml \
+  -e PCF_opsman_password=${PCF_opsman_password} \
+  -e PCF_opsman_decryption_passphrase=${PCF_opsman_decryption_passphrase} \
+  -e PCF_ops_manager_iam_user_access_key=${PCF_ops_manager_iam_user_access_key} \
+  -e PCF_ops_manager_iam_user_secret_key=${PCF_ops_manager_iam_user_secret_key} \
+  -e PCF_ops_manager_ssh_public_key=${PCF_ops_manager_ssh_public_key} \
+  -e PCF_ops_manager_ssh_private_key=${PCF_ops_manager_ssh_private_key} \  
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
     /bin/bash $SCRIPT_REPO/platform-automation-tasks/tasks/configure-authentication.sh
