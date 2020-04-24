@@ -43,29 +43,18 @@ phases:
         timeoutMillis: 60000
     stepsInParallel: false
   - type: COLLECT_ARTIFACT
+    failureStrategies:
+    - failureTypes:
+      - AUTHENTICATION
+      repairActionCode: RETRY
+      repairActionCodeAfterRetry: END_EXECUTION
+      retryCount: 2
+      retryIntervals:
+      - 1
+      specificSteps:
+      - Configure Authentication
     name: Collect Artifact
     steps:
-    - type: SHELL_SCRIPT
-      name: Vault Interpolate
-      properties:
-        commandPath: /tmp/pcf/scripts
-        connectionAttributes: null
-        connectionType: SSH
-        executeOnDelegate: false
-        host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
-        outputVars: ''
-        publishAsVar: false
-        scriptString: ./vault-interpolate.sh
-        scriptType: BASH
-        sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
-        sweepingOutputName: null
-        sweepingOutputScope: null
-        tags: ''
-        templateExpressions: null
-        templateUuid: null
-        templateVariables: null
-        templateVersion: null
-        timeoutMillis: 60000
     - type: SHELL_SCRIPT
       name: Download Create Opsman
       properties:
@@ -79,28 +68,119 @@ phases:
         scriptString: |-
           set -eux
 
-          #TODO: Use a run uuid or something from harness to create a temp location
-          rm -rf pcf-working || true
+          sudo rm -rf pcf-working || true
           mkdir pcf-working
           cd pcf-working
 
-          git clone https://github.com/tonyelmore/harness-platform-automation.git
+          # Get variables
+          export TOOLKIT_IMAGE_VERSION=${workflow.variables.TOOLKIT_IMAGE_VERSION}
+          export SCRIPT_REPO=${workflow.variables.SCRIPT_REPO}
+          export iaas=${workflow.variables.iaas}
+          export foundation=${workflow.variables.foundation}
+          export config_repo=${workflow.variables.config_repo}
+
+          # secrets
+          export GIT_TOKEN=${secrets.getValue("GIT_TOKEN")}
+          export PCF_opsman_password=${secrets.getValue("opsman_password")}
+          export PCF_opsman_decryption_passphrase=${secrets.getValue("opsman_decryption_passphrase")}
+          export PCF_ops_manager_iam_user_access_key=${secrets.getValue("ops_manager_iam_user_access_key")}
+          export PCF_ops_manager_iam_user_secret_key=${secrets.getValue("ops_manager_iam_user_secret_key")}
+
+          IFS=
+          myvar=${secrets.getValue("ops_manager_ssh_public_key")}
+          export PCF_ops_manager_ssh_public_key=$(echo $myvar | base64 -d)
+
+          IFS=
+          myvar=${secrets.getValue("ops_manager_ssh_private_key")}
+          export PCF_ops_manager_ssh_private_key=$(echo $myvar | base64 -d)
+
+          export PCF_ops_manager_ssh_public_key=public_key
+          export PCF_ops_manager_ssh_private_key=private_key
+
+          # Clone the git repositories
+          git clone https://github.com/tonyelmore/${SCRIPT_REPO}.git
           git clone https://github.com/tonyelmore/telmore.git
 
-          export TOOLKIT_IMAGE_VERSION=4.3.4
-
-          # Call vault interpolation (from Brad)
-          # In the meantime - we just have a hard coded secrets folder
-          cp -r /tmp/pcf/secrets .
-
-          cp -r harness-platform-automation/image .
+          # need this for state file
           mkdir generated-state
 
-          ./harness-platform-automation/download-create-opsman.sh
+          ./${SCRIPT_REPO}/download-create-opsman.sh
 
-          # git commit for state.yml (generated-state maybe?)
+          cd telmore
+          git config user.name "State File User"
+          git config user.email "aelmore@vmware.com"
+          git add --all
+          echo $GIT_TOKEN
+          if [[ -n $(git status --porcelain) ]]; then
+            git add -A
+            git commit -m "$COMMIT_MESSAGE" --allow-empty
+            git push 'https://tonyelmore:$(GIT_TOKEN)@github.com/tonyelmore/telmore.git'
+          fi
 
           set +eux
+        scriptType: BASH
+        sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
+        sweepingOutputName: null
+        sweepingOutputScope: null
+        tags: ''
+        templateExpressions: null
+        templateUuid: null
+        templateVariables: null
+        templateVersion: null
+        timeoutMillis: 600000
+    - type: SHELL_SCRIPT
+      name: Configure Authentication
+      properties:
+        commandPath: /tmp
+        connectionAttributes: null
+        connectionType: SSH
+        executeOnDelegate: false
+        host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
+        outputVars: ''
+        publishAsVar: false
+        scriptString: |+
+          set -eux
+
+          sudo rm -rf pcf-working || true
+          mkdir pcf-working
+          cd pcf-working
+
+          # Get variables
+          export TOOLKIT_IMAGE_VERSION=${workflow.variables.TOOLKIT_IMAGE_VERSION}
+          export SCRIPT_REPO=${workflow.variables.SCRIPT_REPO}
+          export iaas=${workflow.variables.iaas}
+          export foundation=${workflow.variables.foundation}
+          export config_repo=${workflow.variables.config_repo}
+          export OM_TARGET=${workflow.variables.OM_TARGET}
+          export OM_USERNAME=${secrets.getValue("opsman_username")}
+          export OM_PASSWORD=${secrets.getValue("opsman_password")}
+
+          # secrets
+          export GIT_TOKEN=${secrets.getValue("GIT_TOKEN")}
+          export PCF_opsman_username=${secrets.getValue("opsman_username")}
+          export PCF_opsman_password=${secrets.getValue("opsman_password")}
+          export PCF_opsman_decryption_passphrase=${secrets.getValue("opsman_decryption_passphrase")}
+          export PCF_ops_manager_iam_user_access_key=${secrets.getValue("ops_manager_iam_user_access_key")}
+          export PCF_ops_manager_iam_user_secret_key=${secrets.getValue("ops_manager_iam_user_secret_key")}
+
+          IFS=
+          myvar=${secrets.getValue("ops_manager_ssh_public_key")}
+          export PCF_ops_manager_ssh_public_key=$(echo $myvar | base64 -d)
+
+          IFS=
+          myvar=${secrets.getValue("ops_manager_ssh_private_key")}
+          export PCF_ops_manager_ssh_private_key=$(echo $myvar | base64 -d)
+
+          # Clone the git repositories
+          git clone https://github.com/tonyelmore/${SCRIPT_REPO}.git
+          git clone https://github.com/tonyelmore/telmore.git
+
+          ./${SCRIPT_REPO}/configure-authentication.sh
+
+          set +eux
+
+
+
         scriptType: BASH
         sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
         sweepingOutputName: null
@@ -112,37 +192,16 @@ phases:
         templateVersion: null
         timeoutMillis: 300000
     - type: SHELL_SCRIPT
-      name: Configure Authentication
+      name: Configure Director
       properties:
-        commandPath: /tmp
+        commandPath: /tmp/pcf/scripts
         connectionAttributes: null
         connectionType: SSH
         executeOnDelegate: false
         host: ec2-35-166-221-220.us-west-2.compute.amazonaws.com
         outputVars: ''
         publishAsVar: false
-        scriptString: |
-          sleep 120
-
-          set -eux
-
-          #TODO: Use a run uuid or something from harness to create a temp location
-          rm -rf pcf-working || true
-          mkdir pcf-working
-          cd pcf-working
-
-          git clone https://github.com/tonyelmore/harness-platform-automation.git
-          git clone https://github.com/tonyelmore/telmore.git
-
-          export TOOLKIT_IMAGE_VERSION=4.3.4
-
-          # Call vault interpolation (from Brad)
-          # In the meantime - we just have a hard coded secrets folder
-          cp -r /tmp/pcf/secrets .
-
-          ./harness-platform-automation/configure-authentication.sh
-
-          set +eux
+        scriptString: ./configure-director.sh
         scriptType: BASH
         sshKeyRef: 1wxgIqIyRu-QERdFtYJVbA
         sweepingOutputName: null
@@ -152,11 +211,44 @@ phases:
         templateUuid: null
         templateVariables: null
         templateVersion: null
-        timeoutMillis: 300000
+        timeoutMillis: 60000
     stepsInParallel: false
   - type: WRAP_UP
     name: Wrap Up
     stepsInParallel: false
   provisionNodes: false
   statefulSet: false
-templatized: false
+templatized: true
+userVariables:
+- type: TEXT
+  fixed: true
+  mandatory: true
+  name: TOOLKIT_IMAGE_VERSION
+  value: 4.3.4
+- type: TEXT
+  fixed: false
+  mandatory: true
+  name: SCRIPT_REPO
+  value: harness-platform-automation
+- type: TEXT
+  fixed: false
+  mandatory: true
+  name: config_repo
+  value: telmore
+- type: TEXT
+  allowedValues: aws,vsphere
+  fixed: false
+  mandatory: true
+  name: iaas
+  value: aws
+- type: TEXT
+  allowedValues: sbx,dev,prod
+  fixed: false
+  mandatory: true
+  name: foundation
+  value: sbx
+- type: TEXT
+  fixed: true
+  mandatory: true
+  name: OM_TARGET
+  value: opsmanager.sbx.viewlifeline.com
