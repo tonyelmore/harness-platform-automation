@@ -33,6 +33,7 @@ fi
 
 export f=interpolated_files/${SECRET_CONFIG_FILE}
 mkdir -p "${f%/*}"
+export OM_VARS_ENV=PCF
 om interpolate -c ${SECRET_CONFIG_FILE} > $f
 vars_files_args+=("--vars-file $f")
 
