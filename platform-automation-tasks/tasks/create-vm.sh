@@ -31,9 +31,10 @@ if [ -z "$IMAGE_FILE" ]; then
   exit 1
 fi
 
-mkdir interpolated_files
-om interpolate -c ${SECRET_CONFIG_FILE} > interploated_files/${SECRET_CONFIG_FILE}
-vars_files_args+=("--vars-file interpolated_files/${SECRET_CONFIG_FILE}")
+export f=interpolated_files/${SECRET_CONFIG_FILE}
+mkdir -p "${f%/*}"
+om interpolate -c ${SECRET_CONFIG_FILE} > $f
+vars_files_args+=("--vars-file $f")
 
 # ${vars_files_args[@] needs to be globbed to split properly (SC2068)
 # INPUT_STATE_FILE need to be globbed (SC2086)
