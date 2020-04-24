@@ -1,4 +1,16 @@
 echo "Starting docker run"
+echo $SCRIPT_REPO
+echo $OM_TARGET
+echo $OM_USERNAME
+echo $OM_PASSWORD
+echo $iaas
+echo $foundation
+echo $PCF_opsman_password
+echo $PCF_opsman_decryption_passphrase
+echo $PCF_ops_manager_iam_user_access_key
+echo $PCF_ops_manager_iam_user_secret_key
+echo $PCF_ops_manager_ssh_public_key
+echo $PCF_ops_manager_ssh_private_key
 echo ${TOOLKIT_IMAGE_VERSION}
 
 docker run -it --rm \
