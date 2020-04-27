@@ -3,6 +3,7 @@ docker run -it --rm \
   -v $PWD/$SCRIPT_REPO:/automation \
   -w /workspace \
   --env-file $SCRIPT_REPO/vars/config-auth.yml \
+  --env-file $SCRIPT_REPO/vars/director-ops-files.yml \
   -e OM_TARGET=${OM_TARGET} \
   -e OM_USERNAME=${OM_USERNAME} \
   -e OM_PASSWORD=${OM_PASSWORD} \
