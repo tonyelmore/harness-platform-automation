@@ -14,7 +14,7 @@ docker run -it --rm \
   -e OM_USERNAME=${OM_USERNAME} \
   -e OM_PASSWORD=${OM_PASSWORD} \
   -e OM_SKIP_SSL_VALIDATION=true \
-  -e INTERPOLATION_PATHS=$config_repo/environments/$iaas/$foundation/config-director/secrets \
+  -e INTERPOLATION_PATH=$config_repo/environments/$iaas/$foundation/config-director/secrets \
   -e DIRECTOR_CONFIG_FILE=$config_repo/environments/$iaas/$foundation/config-director/templates/director.yml \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
     /bin/bash $SCRIPT_REPO/platform-automation-tasks/tasks/configure-director.sh
