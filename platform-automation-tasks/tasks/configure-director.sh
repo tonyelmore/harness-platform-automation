@@ -17,10 +17,12 @@ do
 done
 
 echo ${DIRECTOR_SECRETS}
-f=interpolated_files/${DIRECTOR_SECRETS}
-mkdir -p "${f%/*}"
+secrets=interpolated_files/${DIRECTOR_SECRETS}
+mkdir -p "${secrets%/*}"
 export OM_VARS_ENV=PCF
-om interpolate -c ${DIRECTOR_SECRETS} > $f
+om interpolate -c ${DIRECTOR_SECRETS} > $secrets
+
+ls -al $secrets
 
 # ${vars_files_args[@] needs to be globbed to pass through properly
 # ${ops_files_args[@] needs to be globbed to pass through properly
