@@ -26,7 +26,7 @@ export OM_VARS_ENV=PCF
 for file in $files; do
   echo "interpolating files/$file"
   mkdir -p interpolated-files/"$(dirname "$file")"
-  om interpolate -c ${DIRECTOR_SECRETS} > interpolated-files/$file
+  om interpolate -c ${file} > interpolated-files/$file
   # credhub interpolate --prefix "$PREFIX" \
   # --file files/"$file" > interpolated-files/"$file"
 done
