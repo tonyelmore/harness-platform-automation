@@ -16,6 +16,7 @@ do
   ops_files_args+=("--ops-file ${of}")
 done
 
+echo ${DIRECTOR_SECRETS}
 f=interpolated_files/${DIRECTOR_SECRETS}
 mkdir -p "${f%/*}"
 export OM_VARS_ENV=PCF

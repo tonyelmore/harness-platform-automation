@@ -18,3 +18,4 @@ docker run -it --rm \
   -e DIRECTOR_CONFIG_FILE=$config_repo/environments/$iaas/$foundation/config-director/templates/director.yml \
   platform-automation-toolkit-image:${TOOLKIT_IMAGE_VERSION} \
     /bin/bash $SCRIPT_REPO/platform-automation-tasks/tasks/configure-director.sh
+  
