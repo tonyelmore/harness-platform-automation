@@ -11,6 +11,7 @@ docker run -it --rm \
   -e PCF_ops_manager_ssh_private_key="${PCF_ops_manager_ssh_private_key}" \
   -e PCF_ops_manager_iam_user_access_key="${PCF_ops_manager_iam_user_access_key}" \
   -e PCF_ops_manager_iam_user_secret_key="${PCF_ops_manager_iam_user_secret_key}" \
+  -e PCF_ops_manager_dns="${PCF_ops_manager_dns}" \
   -e OM_TARGET=${OM_TARGET} \
   -e OM_USERNAME=${OM_USERNAME} \
   -e OM_PASSWORD=${OM_PASSWORD} \
