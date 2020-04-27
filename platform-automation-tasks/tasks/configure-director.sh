@@ -21,7 +21,7 @@ done
 # export OM_VARS_ENV=PCF
 # om interpolate -c ${DIRECTOR_SECRETS} > $f
 
-files=$(cd files && find $INTERPOLATION_PATH -type f -name '*.yml' -follow)
+files=$(find $INTERPOLATION_PATH -type f -name '*.yml' -follow)
 export OM_VARS_ENV=PCF
 for file in $files; do
   echo "interpolating files/$file"
