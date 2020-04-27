@@ -16,13 +16,20 @@ do
   ops_files_args+=("--ops-file ${of}")
 done
 
-echo ${DIRECTOR_SECRETS}
-secrets=interpolated_files/${DIRECTOR_SECRETS}
-mkdir -p "${secrets%/*}"
-export OM_VARS_ENV=PCF
-om interpolate -c ${DIRECTOR_SECRETS} > $secrets
+# f=interpolated_files/${DIRECTOR_SECRETS}
+# mkdir -p "${f%/*}"
+# export OM_VARS_ENV=PCF
+# om interpolate -c ${DIRECTOR_SECRETS} > $f
 
-ls -al $secrets
+files=$(cd files && find $INTERPOLATION_PATH -type f -name '*.yml' -follow)
+export OM_VARS_ENV=PCF
+for file in $files; do
+  echo "interpolating files/$file"
+  mkdir -p interpolated-files/"$(dirname "$file")"
+  om interpolate -c ${DIRECTOR_SECRETS} > interpolated-files/$file
+  # credhub interpolate --prefix "$PREFIX" \
+  # --file files/"$file" > interpolated-files/"$file"
+done
 
 # ${vars_files_args[@] needs to be globbed to pass through properly
 # ${ops_files_args[@] needs to be globbed to pass through properly
