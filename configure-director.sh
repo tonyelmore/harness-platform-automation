@@ -4,6 +4,12 @@ docker run -it --rm \
   -w /workspace \
   --env-file $SCRIPT_REPO/vars/director-ops-files.yml \
   --env-file $SCRIPT_REPO/vars/configure-director.yml \
+  -e PCF_opsman_password="${PCF_opsman_password}" \
+  -e PCF_opsman_decryption_passphrase="${PCF_opsman_decryption_passphrase}" \
+  -e PCF_ops_manager_ssh_public_key="${PCF_ops_manager_ssh_public_key}" \
+  -e PCF_ops_manager_ssh_private_key="${PCF_ops_manager_ssh_private_key}" \
+  -e PCF_ops_manager_iam_user_access_key="${PCF_ops_manager_iam_user_access_key}" \
+  -e PCF_ops_manager_iam_user_secret_key="${PCF_ops_manager_iam_user_secret_key}" \
   -e OM_TARGET=${OM_TARGET} \
   -e OM_USERNAME=${OM_USERNAME} \
   -e OM_PASSWORD=${OM_PASSWORD} \
