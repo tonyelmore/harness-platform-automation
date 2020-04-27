@@ -4,6 +4,7 @@ docker run -it --rm \
   -w /workspace \
   --env-file $SCRIPT_REPO/vars/config-auth.yml \
   --env-file $SCRIPT_REPO/vars/director-ops-files.yml \
+  --env-file $SCRIPT_REPO/vars/configure-director.yml \
   -e OM_TARGET=${OM_TARGET} \
   -e OM_USERNAME=${OM_USERNAME} \
   -e OM_PASSWORD=${OM_PASSWORD} \
