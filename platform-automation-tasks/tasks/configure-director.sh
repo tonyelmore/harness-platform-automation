@@ -16,6 +16,11 @@ do
   ops_files_args+=("--ops-file ${of}")
 done
 
+f=interpolated_files/${DIRECTOR-SECRETS}
+mkdir -p "${f%/*}"
+export OM_VARS_ENV=PCF
+om interpolate -c ${AUTH_CONFIG_FILE} > $f
+
 # ${vars_files_args[@] needs to be globbed to pass through properly
 # ${ops_files_args[@] needs to be globbed to pass through properly
 # shellcheck disable=SC2068
